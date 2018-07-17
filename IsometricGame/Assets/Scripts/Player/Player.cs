@@ -7,63 +7,99 @@ public class Player : MonoBehaviour
     /*Creating a reference to the animator attached to the player character which 
      * allows the animations to be controlled from this class*/
     Animator animator;
-    /*An float to control the height the player can jump to*/
-    public float jumpSpeed;
     /*A float used to influence the players speed*/
     public float moveSpeed;
+    /*A float for slower player movements (backing up etc.)*/
+    public float slowSpeed;
+    float moveHorizontal;
+    float moveVertical;
     /*A float to time animations*/
     float animationTimer = 2.0f;
     /*A float to check if the player can jump*/
     float canJump = 0.0f;
     /*A boolean to check if the player is currently jumping*/
     bool isJumping;
-    /*A  vector used for the players direction*/
-    Vector3 direction;
+    Vector3 movement;
+    /*The rigid body that will be used to manipulate the player*/
+    Rigidbody rigid;
+    /*An enumerator to hold the states available to the player*/
+    public enum PlayerState { Grounded, Walking, Running, Jumping, Falling, Swimming }
+    public PlayerState playerState;
 
     void Start()
     {
+        /*The initial dog state should be idle*/
+        playerState = PlayerState.Grounded;
+        /*A reference to the rigidbody component*/
+        rigid = GetComponent<Rigidbody>();
+        /*This is how we get the reference to the Animator*/
+        animator = GetComponent<Animator>();
     }
     void Update()
     {
-        /*This is how we get the reference to the Animator*/
-        animator = GetComponent<Animator>();
         /*Ensuring movement works per-frame*/
         Movement();
+        UpdateStates();
     }
 
+    void UpdateStates()
+    {
+        switch (playerState)
+        {
+            case PlayerState.Grounded:
+                animator.SetBool("isWalking", false);
+                animator.SetInteger("isJumping", 0);
+                break;
+            case PlayerState.Walking:
+                animator.SetBool("isWalking", true);
+                break;
+            case PlayerState.Running:
+                animator.SetBool("isRunning", true);
+                break;
+            case PlayerState.Jumping:
+                animator.SetInteger("isJumping", 1);
+                rigid.velocity = new Vector3(0, 3.5f, 0);
+                canJump = Time.time + 2.0f;
+                break;
+            case PlayerState.Falling:
+                animator.SetBool("isFalling", true);
+                break;
+            case PlayerState.Swimming:
+                animator.SetBool("isSwimming", true);
+                break;
+        }
+    }
     void Movement()
     {
-        animator.SetInteger("isJumping", 0);
-        animator.SetBool("isWalking", false);
+        playerState = PlayerState.Grounded;
+
         if (Input.GetKey(KeyCode.W))
         {
-            animator.SetBool("isWalking", true);
-            transform.Translate(0, 0, moveSpeed * Time.deltaTime);
+            playerState = PlayerState.Walking;
         }
          if (Input.GetKey(KeyCode.A))
         {
-            animator.SetBool("isWalking", true);
-            transform.Translate(-moveSpeed * Time.deltaTime, 0, 0);
+            playerState = PlayerState.Walking;
         }
          if (Input.GetKey(KeyCode.S))
         {
-            animator.SetBool("isWalking", true);
-            transform.Translate(0, 0, -moveSpeed * Time.deltaTime);
+            playerState = PlayerState.Walking;
         }
          if (Input.GetKey(KeyCode.D))
         {
-            animator.SetBool("isWalking", true);
-            transform.Translate(moveSpeed * Time.deltaTime, 0, 0);
+            playerState = PlayerState.Walking;
         }
-        if (Time.time > canJump)
+        if (Input.GetKey(KeyCode.Space) && Time.time > canJump)
         {
-            if (Input.GetKey(KeyCode.Space))
-            {
-                animator.SetInteger("isJumping", 1);
-                transform.Translate(Vector2.up * 25 * Time.deltaTime, 0);
-                canJump = Time.time + 2.0f;
-            }
+            playerState = PlayerState.Jumping;
         }
+        /*Allows the horizontal and vertical axis to be found from world space*/
+        moveHorizontal = Input.GetAxisRaw("Horizontal");
+        moveVertical = Input.GetAxisRaw("Vertical");
+        movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+        /*Slerps the players rotation based on the look rotation and their current movement*/
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 0.10f);
+        transform.Translate(movement * moveSpeed * Time.deltaTime, Space.World);
     }
     private IEnumerator WaitForAnimation(Animation animation)
     {
