@@ -37,11 +37,13 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
-        /*Ensuring movement works per-frame*/
-        Movement();
         UpdateStates();
     }
-
+    void LateUpdate()
+    {
+        /*Ensuring movement works per-frame*/
+        Movement();
+    }
     void UpdateStates()
     {
         switch (playerState)
@@ -89,7 +91,7 @@ public class Player : MonoBehaviour
         {
             playerState = PlayerState.Walking;
         }
-        if (Input.GetKey(KeyCode.Space) && Time.time > canJump)
+        if (Input.GetKeyUp(KeyCode.Space) && Time.time > canJump)
         {
             playerState = PlayerState.Jumping;
         }
