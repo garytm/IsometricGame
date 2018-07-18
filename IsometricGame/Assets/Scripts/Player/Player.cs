@@ -8,28 +8,25 @@ public class Player : MonoBehaviour
      * allows the animations to be controlled from this class*/
     Animator animator;
     /*A float used to influence the players speed*/
-    public float moveSpeed;
+    public float walkSpeed;
+    public float runSpeed;
     /*A float for slower player movements (backing up etc.)*/
     public float slowSpeed;
     float moveHorizontal;
     float moveVertical;
-    /*A float to time animations*/
-    float animationTimer = 2.0f;
-    /*A float to check if the player can jump*/
+
     float canJump = 0.0f;
-    /*A boolean to check if the player is currently jumping*/
-    bool isJumping;
     Vector3 movement;
     /*The rigid body that will be used to manipulate the player*/
     Rigidbody rigid;
     /*An enumerator to hold the states available to the player*/
-    public enum PlayerState { Grounded, Walking, Running, Jumping, Falling, Swimming }
+    public enum PlayerState { Idle, Walking, Running, Jumping }
     public PlayerState playerState;
 
     void Start()
     {
         /*The initial dog state should be idle*/
-        playerState = PlayerState.Grounded;
+        playerState = PlayerState.Idle;
         /*A reference to the rigidbody component*/
         rigid = GetComponent<Rigidbody>();
         /*This is how we get the reference to the Animator*/
@@ -38,9 +35,6 @@ public class Player : MonoBehaviour
     void Update()
     {
         UpdateStates();
-    }
-    void LateUpdate()
-    {
         /*Ensuring movement works per-frame*/
         Movement();
     }
@@ -48,67 +42,69 @@ public class Player : MonoBehaviour
     {
         switch (playerState)
         {
-            case PlayerState.Grounded:
+            case PlayerState.Idle:
+                animator.SetBool("isIdle", true);
                 animator.SetBool("isWalking", false);
-                animator.SetInteger("isJumping", 0);
+                animator.SetBool("isJumping", false);
+                animator.SetBool("isRunning", false);
                 break;
             case PlayerState.Walking:
                 animator.SetBool("isWalking", true);
+                animator.SetBool("isIdle", false);
+                animator.SetBool("isJumping", false);
+                animator.SetBool("isRunning", false);
+                /*Allows the horizontal and vertical axis to be found from world space*/
+                moveHorizontal = Input.GetAxisRaw("Horizontal");
+                moveVertical = Input.GetAxisRaw("Vertical");
+                movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+                /*Slerps the players rotation based on the look rotation and their current movement*/
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 0.10f);
+                transform.Translate(movement * walkSpeed * Time.deltaTime, Space.World);
                 break;
             case PlayerState.Running:
                 animator.SetBool("isRunning", true);
+                animator.SetBool("isIdle", false);
+                animator.SetBool("isJumping", false);
+                animator.SetBool("isWalking", false);
+                /*Allows the horizontal and vertical axis to be found from world space*/
+                moveHorizontal = Input.GetAxisRaw("Horizontal");
+                moveVertical = Input.GetAxisRaw("Vertical");
+                movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+                /*Slerps the players rotation based on the look rotation and their current movement*/
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 0.10f);
+                transform.Translate(movement * runSpeed * Time.deltaTime, Space.World);
                 break;
             case PlayerState.Jumping:
-                animator.SetInteger("isJumping", 1);
+                animator.SetBool("isJumping", true);
+                animator.SetBool("isRunning", false);
+                animator.SetBool("isIdle", false);
+                animator.SetBool("isWalking", false);
                 rigid.velocity = new Vector3(0, 3.5f, 0);
-                canJump = Time.time + 2.0f;
-                break;
-            case PlayerState.Falling:
-                animator.SetBool("isFalling", true);
-                break;
-            case PlayerState.Swimming:
-                animator.SetBool("isSwimming", true);
+                canJump = Time.time + 1.0f;
                 break;
         }
     }
     void Movement()
     {
-        playerState = PlayerState.Grounded;
+        playerState = PlayerState.Idle;
+        if (Input.GetKey(KeyCode.W) || (Input.GetKey(KeyCode.A))
+        || (Input.GetKey(KeyCode.S)) || (Input.GetKey(KeyCode.D)))
+        {
+            playerState = PlayerState.Walking;
 
-        if (Input.GetKey(KeyCode.W))
-        {
-            playerState = PlayerState.Walking;
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                playerState = PlayerState.Running;
+            }
         }
-         if (Input.GetKey(KeyCode.A))
-        {
-            playerState = PlayerState.Walking;
-        }
-         if (Input.GetKey(KeyCode.S))
-        {
-            playerState = PlayerState.Walking;
-        }
-         if (Input.GetKey(KeyCode.D))
-        {
-            playerState = PlayerState.Walking;
-        }
-        if (Input.GetKeyUp(KeyCode.Space) && Time.time > canJump)
+        if (Input.GetKey(KeyCode.Space) && Time.time > canJump)
         {
             playerState = PlayerState.Jumping;
         }
-        /*Allows the horizontal and vertical axis to be found from world space*/
-        moveHorizontal = Input.GetAxisRaw("Horizontal");
-        moveVertical = Input.GetAxisRaw("Vertical");
-        movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-        /*Slerps the players rotation based on the look rotation and their current movement*/
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 0.10f);
-        transform.Translate(movement * moveSpeed * Time.deltaTime, Space.World);
     }
-    private IEnumerator WaitForAnimation(Animation animation)
+
+    IEnumerator WaitTimer()
     {
-        do
-        {
-            yield return null;
-        }
-        while (animation.isPlaying);
+            yield return new WaitForSeconds(2.0f);
     }
 }
