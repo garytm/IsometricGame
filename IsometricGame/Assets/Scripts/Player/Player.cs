@@ -12,21 +12,19 @@ public class Player : MonoBehaviour
     public float runSpeed;
     /*A float for slower player movements (backing up etc.)*/
     public float slowSpeed;
-    float moveHorizontal;
-    float moveVertical;
 
-    float canJump = 0.0f;
-    Vector3 movement;
+    public float canJump = 0.0f;
     /*The rigid body that will be used to manipulate the player*/
     Rigidbody rigid;
+    Vector3 direction;
     /*An enumerator to hold the states available to the player*/
-    public enum PlayerState { Idle, Walking, Running, Jumping }
-    public PlayerState playerState;
+    public enum State { Idle, Walking, Running, Jumping }
+    public State state;
 
     void Start()
     {
         /*The initial dog state should be idle*/
-        playerState = PlayerState.Idle;
+        state = State.Idle;
         /*A reference to the rigidbody component*/
         rigid = GetComponent<Rigidbody>();
         /*This is how we get the reference to the Animator*/
@@ -34,47 +32,60 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
+        Movement(direction);
+
         UpdateStates();
-        /*Ensuring movement works per-frame*/
-        Movement();
+    }
+    public void Movement(Vector3 direction)
+    {
+        state = State.Idle;
+        float moveHorizontal = Input.GetAxisRaw("Horizontal");
+        float moveVertical = Input.GetAxisRaw("Vertical");
+        direction = new Vector3(moveHorizontal, 0.0f, moveVertical);
+        if (Input.GetKey(KeyCode.W) || (Input.GetKey(KeyCode.A))
+        || (Input.GetKey(KeyCode.S)) || (Input.GetKey(KeyCode.D)))
+        {
+            state = State.Walking;
+            /*Slerps the players rotation based on the look rotation and their current movement*/
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 0.10f);
+            transform.Translate(direction * walkSpeed * Time.deltaTime, Space.World);
+
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                state = State.Running;
+                /*Slerps the players rotation based on the look rotation and their current movement*/
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 0.10f);
+                transform.Translate(direction * walkSpeed * Time.deltaTime, Space.World);
+            }
+        }
+        if (Input.GetKey(KeyCode.Space) && Time.time > canJump)
+        {
+            state = State.Jumping;
+        }
     }
     void UpdateStates()
     {
-        switch (playerState)
+        switch (state)
         {
-            case PlayerState.Idle:
+            case State.Idle:
                 animator.SetBool("isIdle", true);
                 animator.SetBool("isWalking", false);
                 animator.SetBool("isJumping", false);
                 animator.SetBool("isRunning", false);
                 break;
-            case PlayerState.Walking:
+            case State.Walking:
                 animator.SetBool("isWalking", true);
                 animator.SetBool("isIdle", false);
                 animator.SetBool("isJumping", false);
-                animator.SetBool("isRunning", false);
-                /*Allows the horizontal and vertical axis to be found from world space*/
-                moveHorizontal = Input.GetAxisRaw("Horizontal");
-                moveVertical = Input.GetAxisRaw("Vertical");
-                movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-                /*Slerps the players rotation based on the look rotation and their current movement*/
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 0.10f);
-                transform.Translate(movement * walkSpeed * Time.deltaTime, Space.World);
+                animator.SetBool("isRunning", false); 
                 break;
-            case PlayerState.Running:
+            case State.Running:
                 animator.SetBool("isRunning", true);
                 animator.SetBool("isIdle", false);
                 animator.SetBool("isJumping", false);
                 animator.SetBool("isWalking", false);
-                /*Allows the horizontal and vertical axis to be found from world space*/
-                moveHorizontal = Input.GetAxisRaw("Horizontal");
-                moveVertical = Input.GetAxisRaw("Vertical");
-                movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-                /*Slerps the players rotation based on the look rotation and their current movement*/
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 0.10f);
-                transform.Translate(movement * runSpeed * Time.deltaTime, Space.World);
                 break;
-            case PlayerState.Jumping:
+            case State.Jumping:
                 animator.SetBool("isJumping", true);
                 animator.SetBool("isRunning", false);
                 animator.SetBool("isIdle", false);
@@ -83,28 +94,5 @@ public class Player : MonoBehaviour
                 canJump = Time.time + 1.0f;
                 break;
         }
-    }
-    void Movement()
-    {
-        playerState = PlayerState.Idle;
-        if (Input.GetKey(KeyCode.W) || (Input.GetKey(KeyCode.A))
-        || (Input.GetKey(KeyCode.S)) || (Input.GetKey(KeyCode.D)))
-        {
-            playerState = PlayerState.Walking;
-
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                playerState = PlayerState.Running;
-            }
-        }
-        if (Input.GetKey(KeyCode.Space) && Time.time > canJump)
-        {
-            playerState = PlayerState.Jumping;
-        }
-    }
-
-    IEnumerator WaitTimer()
-    {
-            yield return new WaitForSeconds(2.0f);
     }
 }
