@@ -182,6 +182,18 @@ Prefab:
       propertyPath: m_IsTrigger
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4051687436064636, guid: dacdd70be2170074799d22ca1c1b3c1b, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4051687436064636, guid: dacdd70be2170074799d22ca1c1b3c1b, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4051687436064636, guid: dacdd70be2170074799d22ca1c1b3c1b, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dacdd70be2170074799d22ca1c1b3c1b, type: 2}
   m_IsPrefabParent: 0
@@ -243,10 +255,10 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 100
   field of view: 60
   orthographic: 1
-  orthographic size: 4
+  orthographic size: 3
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -289,6 +301,8 @@ MonoBehaviour:
   target: {fileID: 1115883972}
   smoothSpeed: 0.25
   offset: {x: -10, y: 10, z: -10}
+  rotate: 0
+  rotationSpeed: 5
 --- !u!1 &259490465
 GameObject:
   m_ObjectHideFlags: 0

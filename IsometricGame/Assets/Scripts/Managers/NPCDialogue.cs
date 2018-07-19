@@ -33,7 +33,7 @@ public class NPCDialogue : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            for (int i = 0; i <= dialoguePopup.Length; i++)
+            for (int i = 0; i <= dialoguePopup.Length - 1; i++)
             {
                 dialoguePopup[i].enabled = false;
             }
