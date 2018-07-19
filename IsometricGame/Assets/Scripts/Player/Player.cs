@@ -32,8 +32,9 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
+        /*Ensuring the movement is updated every frame*/
         Movement(direction);
-
+        /*Ensuring the states are updated every frame*/
         UpdateStates();
     }
     public void Movement(Vector3 direction)
@@ -53,7 +54,6 @@ public class Player : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 state = State.Running;
-                /*Slerps the players rotation based on the look rotation and their current movement*/
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 0.10f);
                 transform.Translate(direction * walkSpeed * Time.deltaTime, Space.World);
             }
@@ -63,6 +63,7 @@ public class Player : MonoBehaviour
             state = State.Jumping;
         }
     }
+    /*This method contains switch statements for animation settings when the player is in each state*/
     void UpdateStates()
     {
         switch (state)

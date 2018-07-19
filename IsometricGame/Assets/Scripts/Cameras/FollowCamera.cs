@@ -1,5 +1,4 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FollowCamera : MonoBehaviour
 {
@@ -9,7 +8,7 @@ public class FollowCamera : MonoBehaviour
     public float smoothSpeed = 0.25f;
     /*A vector for offsetting the camera*/
     public Vector3 offset;
-
+    /*Using a late update makes the camera motion smoother*/
     void LateUpdate()
     {
         transform.position = target.position + offset;
