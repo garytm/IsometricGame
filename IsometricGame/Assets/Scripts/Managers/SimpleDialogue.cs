@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class NPCDialogue : MonoBehaviour
+public class SimpleDialogue : MonoBehaviour
 {
+    /*An array of images used for NPCS who do not have proper dialogue*/
     public Image[] dialoguePopup;
 
     public enum State { Before, Deciding, Talking, After }

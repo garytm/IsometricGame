@@ -7,17 +7,14 @@ public class Player : MonoBehaviour
     /*Creating a reference to the animator attached to the player character which 
      * allows the animations to be controlled from this class*/
     Animator animator;
+    /*The rigid body that will be used to manipulate the player*/
+    Rigidbody rigid;
     /*A float used to influence the players speed*/
     public float walkSpeed;
     public float runSpeed;
     /*A float for slower player movements (backing up etc.)*/
     public float slowSpeed;
-
     public float canJump = 0.0f;
-    /*The rigid body that will be used to manipulate the player*/
-    Rigidbody rigid;
-    Vector3 direction;
-    FollowCamera followCamera;
     /*An enumerator to hold the states available to the player*/
     public enum State { Idle, Walking, Running, Jumping }
     public State state;
@@ -30,23 +27,22 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         /*This is how we get the reference to the Animator*/
         animator = GetComponent<Animator>();
-        followCamera = FindObjectOfType<FollowCamera>();
     }
     void Update()
     {
         /*Ensuring the movement is updated every frame*/
-        Movement(direction);
+        Movement();
         /*Ensuring the states are updated every frame*/
         UpdateStates();
     }
-    public void Movement(Vector3 direction)
+    public void Movement()
     {
         state = State.Idle;
-        float moveHorizontal = Input.GetAxisRaw("Horizontal");
-        float moveVertical = Input.GetAxisRaw("Vertical");
-        direction = new Vector3(moveHorizontal, 0.0f, moveVertical);
-        if (Input.GetKey(KeyCode.W) || (Input.GetKey(KeyCode.A))
-        || (Input.GetKey(KeyCode.S)) || (Input.GetKey(KeyCode.D)))
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
+        Vector3 direction = new Vector3(moveHorizontal, 0.0f, moveVertical);
+        direction.Normalize();
+        if (Input.GetKey(KeyCode.W) || (Input.GetKey(KeyCode.A) || (Input.GetKey(KeyCode.S) || (Input.GetKey(KeyCode.D)))))
         {
             state = State.Walking;
             /*Slerps the players rotation based on the look rotation and their current movement*/
