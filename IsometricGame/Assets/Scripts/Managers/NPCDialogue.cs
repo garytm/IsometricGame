@@ -5,38 +5,64 @@ using UnityEngine.UI;
 
 public class NPCDialogue : MonoBehaviour
 {
-    bool inConversation;
-
     public Image[] dialoguePopup;
+
+    public enum State { Before, Deciding, Talking, After }
+    public State state;
 
     void Start()
     {
-        inConversation = false;
+        state = State.Before;
+    }
+    void Update()
+    {
+        UpdateStates();
     }
 
     /*This method checks if the players head collider enters the box which triggers the popup text to appear
      and enables it if true then checks if it exits and disables it if true*/
+    void OnTriggerEnter(Collider other)
+    {
+        if (state == State.Before)
+        {
+            if (other.CompareTag("Player"))
+            {
+                state = State.Deciding;
+            }
+        }
+    }
     void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player") && inConversation == false)
+        if (state == State.Deciding)
         {
-            dialoguePopup[0].enabled = true;   
-        }
-        if (Input.GetKey(KeyCode.E))
-        {
-            dialoguePopup[0].enabled = false;
-            inConversation = true;
-            dialoguePopup[1].enabled = true;
+            if (Input.GetKey(KeyCode.E))
+            {
+                state = State.Talking;
+            }
         }
     }
     void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            for (int i = 0; i <= dialoguePopup.Length - 1; i++)
-            {
-                dialoguePopup[i].enabled = false;
-            }
+            state = State.Before;
+        }
+    }
+    void UpdateStates()
+    {
+        switch (state)
+        {
+            case State.Before:
+                dialoguePopup[0].enabled = false;
+                dialoguePopup[1].enabled = false;
+                break;
+            case State.Deciding:
+                dialoguePopup[0].enabled = true;
+                break;
+            case State.Talking:
+                dialoguePopup[0].enabled = false;
+                dialoguePopup[1].enabled = true;
+                break;
         }
     }
 }

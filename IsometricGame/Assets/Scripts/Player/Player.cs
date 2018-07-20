@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     /*The rigid body that will be used to manipulate the player*/
     Rigidbody rigid;
     Vector3 direction;
+    FollowCamera followCamera;
     /*An enumerator to hold the states available to the player*/
     public enum State { Idle, Walking, Running, Jumping }
     public State state;
@@ -29,6 +30,7 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         /*This is how we get the reference to the Animator*/
         animator = GetComponent<Animator>();
+        followCamera = FindObjectOfType<FollowCamera>();
     }
     void Update()
     {

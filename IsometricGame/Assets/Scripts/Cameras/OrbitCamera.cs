@@ -9,12 +9,11 @@ public class OrbitCamera : MonoBehaviour
 
     void LateUpdate()
     {
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.RightArrow))
         {
             transform.RotateAround(cameraFocus.position, Vector3.up, rotateSpeed * Time.deltaTime);
         }
-
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
             transform.RotateAround(cameraFocus.position, -Vector3.up, rotateSpeed * Time.deltaTime);
         }
