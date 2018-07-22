@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     public float runSpeed;
     /*A float for slower player movements (backing up etc.)*/
     public float slowSpeed;
-    public float canJump = 0.0f;
+    float canJump = 0.0f;
     /*An enumerator to hold the states available to the player*/
     public enum State { Idle, Walking, Running, Jumping }
     public State state;
