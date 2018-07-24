@@ -5,14 +5,16 @@ using UnityEngine.UI;
 
 public class SimpleDialogue : MonoBehaviour
 {
+    NPCDialogue npcDialogue;
     /*An array of images used for NPCS who do not have proper dialogue*/
     public Image[] dialoguePopup;
 
-    public enum State { Before, Deciding, Talking, After }
+    public enum State { Before, Greeting, Deciding, Talking }
     public State state;
 
     void Start()
     {
+        npcDialogue = FindObjectOfType<NPCDialogue>();
         state = State.Before;
     }
     void Update()
@@ -22,24 +24,23 @@ public class SimpleDialogue : MonoBehaviour
 
     /*This method checks if the players head collider enters the box which triggers the popup text to appear
      and enables it if true then checks if it exits and disables it if true*/
+
     void OnTriggerEnter(Collider other)
     {
         if (state == State.Before)
         {
             if (other.CompareTag("Player"))
             {
-                state = State.Deciding;
+                state = State.Greeting;
             }
         }
     }
     void OnTriggerStay(Collider other)
     {
-        if (state == State.Deciding)
+        if (Input.GetKey(KeyCode.E))
         {
-            if (Input.GetKey(KeyCode.E))
-            {
-                state = State.Talking;
-            }
+            npcDialogue.TriggerDialogue();
+            state = State.Talking;
         }
     }
     void OnTriggerExit(Collider other)
@@ -57,12 +58,13 @@ public class SimpleDialogue : MonoBehaviour
                 dialoguePopup[0].enabled = false;
                 dialoguePopup[1].enabled = false;
                 break;
-            case State.Deciding:
+            case State.Greeting:
                 dialoguePopup[0].enabled = true;
+                dialoguePopup[1].enabled = true;
                 break;
             case State.Talking:
                 dialoguePopup[0].enabled = false;
-                dialoguePopup[1].enabled = true;
+                dialoguePopup[1].enabled = false;
                 break;
         }
     }
