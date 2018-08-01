@@ -14,7 +14,7 @@ public class SimpleDialogue : MonoBehaviour
 
     void Start()
     {
-        npcDialogue = FindObjectOfType<NPCDialogue>();
+        npcDialogue = GetComponent<NPCDialogue>();
         state = State.Before;
     }
     void Update()
@@ -56,15 +56,15 @@ public class SimpleDialogue : MonoBehaviour
         {
             case State.Before:
                 dialoguePopup[0].enabled = false;
-                dialoguePopup[1].enabled = false;
+               //dialoguePopup[1].enabled = false;
                 break;
             case State.Greeting:
                 dialoguePopup[0].enabled = true;
-                dialoguePopup[1].enabled = true;
+                //dialoguePopup[1].enabled = true;
                 break;
             case State.Talking:
                 dialoguePopup[0].enabled = false;
-                dialoguePopup[1].enabled = false;
+                //dialoguePopup[1].enabled = false;
                 break;
         }
     }
