@@ -38,25 +38,28 @@ public class Player : MonoBehaviour
     public void Movement()
     {
         state = State.Idle;
+        float deadZone = 0.1f;
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
+        float jump = Input.GetAxis("Jump");
         Vector3 direction = new Vector3(moveHorizontal, 0.0f, moveVertical);
         direction.Normalize();
-        if (Input.GetKey(KeyCode.W) || (Input.GetKey(KeyCode.A) || (Input.GetKey(KeyCode.S) || (Input.GetKey(KeyCode.D)))))
+
+        if (moveHorizontal > deadZone || moveHorizontal < -deadZone || moveVertical > deadZone || moveVertical < -deadZone)
         {
             state = State.Walking;
             /*Slerps the players rotation based on the look rotation and their current movement*/
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 0.10f);
             transform.Translate(direction * walkSpeed * Time.deltaTime, Space.World);
 
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey("joystick button 1"))
             {
                 state = State.Running;
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 0.10f);
                 transform.Translate(direction * walkSpeed * Time.deltaTime, Space.World);
             }
         }
-        if (Input.GetKey(KeyCode.Space) && Time.time > canJump)
+        if (jump > deadZone && Time.time > canJump)
         {
             state = State.Jumping;
         }
