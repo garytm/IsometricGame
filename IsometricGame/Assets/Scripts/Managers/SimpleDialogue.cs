@@ -6,66 +6,51 @@ using UnityEngine.UI;
 public class SimpleDialogue : MonoBehaviour
 {
     NPCDialogue npcDialogue;
-    /*An array of images used for NPCS who do not have proper dialogue*/
-    public Image[] dialoguePopup;
-
-    public enum State { Before, Greeting, Deciding, Talking }
-    public State state;
+    DialogueManager dialogueManager;
+    CameraZoom cameraZoom;
+    public bool inConversation;
+    public Image ePopup;
 
     void Start()
     {
         npcDialogue = GetComponent<NPCDialogue>();
-        state = State.Before;
+        dialogueManager = FindObjectOfType<DialogueManager>();
+        cameraZoom = FindObjectOfType<CameraZoom>();
+        inConversation = false;
+        ePopup.enabled = false;
     }
-    void Update()
-    {
-        UpdateStates();
-    }
-
     /*This method checks if the players head collider enters the box which triggers the popup text to appear
      and enables it if true then checks if it exits and disables it if true*/
 
     void OnTriggerEnter(Collider other)
     {
-        if (state == State.Before)
+        if (other.CompareTag("Player"))
         {
-            if (other.CompareTag("Player"))
-            {
-                state = State.Greeting;
-            }
+            ePopup.enabled = true;
         }
     }
     void OnTriggerStay(Collider other)
     {
-        if (Input.GetKey(KeyCode.E))
+        if (inConversation == false && Input.GetKeyUp(KeyCode.E) || Input.GetKeyUp("joystick button 3"))
         {
+            inConversation = true;
+            cameraZoom.isZoomed = true;
             npcDialogue.TriggerDialogue();
-            state = State.Talking;
+            ePopup.enabled = false;
+            if (Input.GetKey(KeyCode.E) || Input.GetKey("joystick button 3"))
+            {
+                dialogueManager.ShowNextSentence();
+            }
         }
     }
     void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            state = State.Before;
-        }
-    }
-    void UpdateStates()
-    {
-        switch (state)
-        {
-            case State.Before:
-                dialoguePopup[0].enabled = false;
-               //dialoguePopup[1].enabled = false;
-                break;
-            case State.Greeting:
-                dialoguePopup[0].enabled = true;
-                //dialoguePopup[1].enabled = true;
-                break;
-            case State.Talking:
-                dialoguePopup[0].enabled = false;
-                //dialoguePopup[1].enabled = false;
-                break;
+            dialogueManager.EndDialogue();
+            cameraZoom.isZoomed = false;
+            inConversation = false;
+            ePopup.enabled = false;
         }
     }
 }

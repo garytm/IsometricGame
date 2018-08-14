@@ -7,8 +7,9 @@ public class Player : MonoBehaviour
     /*Creating a reference to the animator attached to the player character which 
      * allows the animations to be controlled from this class*/
     Animator animator;
+    SimpleDialogue simpleDialogue;
     /*The rigid body that will be used to manipulate the player*/
-    Rigidbody rigid;
+    public Rigidbody rigid;
     /*A float used to influence the players speed*/
     public float walkSpeed;
     public float runSpeed;
@@ -23,6 +24,7 @@ public class Player : MonoBehaviour
     {
         /*The initial dog state should be idle*/
         state = State.Idle;
+        simpleDialogue = FindObjectOfType<SimpleDialogue>();
         /*A reference to the rigidbody component*/
         rigid = GetComponent<Rigidbody>();
         /*This is how we get the reference to the Animator*/
@@ -45,24 +47,24 @@ public class Player : MonoBehaviour
         Vector3 direction = new Vector3(moveHorizontal, 0.0f, moveVertical);
         direction.Normalize();
 
-        if (moveHorizontal > deadZone || moveHorizontal < -deadZone || moveVertical > deadZone || moveVertical < -deadZone)
-        {
-            state = State.Walking;
-            /*Slerps the players rotation based on the look rotation and their current movement*/
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 0.10f);
-            transform.Translate(direction * walkSpeed * Time.deltaTime, Space.World);
-
-            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey("joystick button 1"))
+            if (moveHorizontal > deadZone || moveHorizontal < -deadZone || moveVertical > deadZone || moveVertical < -deadZone)
             {
-                state = State.Running;
+                state = State.Walking;
+                /*Slerps the players rotation based on the look rotation and their current movement*/
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 0.10f);
                 transform.Translate(direction * walkSpeed * Time.deltaTime, Space.World);
+
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey("joystick button 1"))
+                {
+                    state = State.Running;
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 0.10f);
+                    transform.Translate(direction * walkSpeed * Time.deltaTime, Space.World);
+                }
             }
-        }
-        if (jump > deadZone && Time.time > canJump)
-        {
-            state = State.Jumping;
-        }
+            if (jump > deadZone && Time.time > canJump)
+            {
+                state = State.Jumping;
+            }
     }
     /*This method contains switch statements for animation settings when the player is in each state*/
     void UpdateStates()
