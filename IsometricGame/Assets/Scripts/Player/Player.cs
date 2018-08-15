@@ -19,7 +19,9 @@ public class Player : MonoBehaviour
     /*An enumerator to hold the states available to the player*/
     public enum State { Idle, Walking, Running, Jumping }
     public State state;
+    public string backgroundMusicName;
 
+    AudioManager audioManager;
     void Start()
     {
         /*The initial dog state should be idle*/
@@ -29,6 +31,12 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         /*This is how we get the reference to the Animator*/
         animator = GetComponent<Animator>();
+        audioManager = AudioManager.instance;
+        if (audioManager == null)
+        {
+            Debug.LogError("No AudioManager found in scene!");
+        }
+        audioManager.PlaySound(backgroundMusicName);
     }
     void Update()
     {
