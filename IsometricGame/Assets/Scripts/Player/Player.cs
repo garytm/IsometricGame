@@ -21,6 +21,8 @@ public class Player : MonoBehaviour
     public State state;
     public string backgroundMusicName;
 
+    public bool canMove = true;
+
     AudioManager audioManager;
     void Start()
     {
@@ -54,7 +56,8 @@ public class Player : MonoBehaviour
         float jump = Input.GetAxis("Jump");
         Vector3 direction = new Vector3(moveHorizontal, 0.0f, moveVertical);
         direction.Normalize();
-
+        if (canMove == true)
+        {
             if (moveHorizontal > deadZone || moveHorizontal < -deadZone || moveVertical > deadZone || moveVertical < -deadZone)
             {
                 state = State.Walking;
@@ -73,6 +76,7 @@ public class Player : MonoBehaviour
             {
                 state = State.Jumping;
             }
+        }
     }
     /*This method contains switch statements for animation settings when the player is in each state*/
     void UpdateStates()

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
+    Player player;
     public Animator animator;
     public Text nameText;
     public Text dialogueText;
@@ -13,6 +14,7 @@ public class DialogueManager : MonoBehaviour
 
 	void Start ()
     {
+        player = FindObjectOfType<Player>();
         /*Defining sentences as a new queue of type string*/
         sentences = new Queue<string>();
 	}
@@ -20,7 +22,7 @@ public class DialogueManager : MonoBehaviour
     public void StartDialogue(Dialogue dialogue)
     {
         animator.SetBool("isOpen", true);
-
+        player.canMove = false;
         nameText.text = dialogue.name;
         /*Clears any left over sentences from a previous conversation*/
         sentences.Clear();
@@ -59,6 +61,7 @@ public class DialogueManager : MonoBehaviour
     public void EndDialogue()
     {
         animator.SetBool("isOpen", false);
+        player.canMove = true;
         Debug.Log("End of conversation!");
     }
 }
