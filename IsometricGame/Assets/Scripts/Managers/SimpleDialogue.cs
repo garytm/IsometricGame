@@ -33,20 +33,23 @@ public class SimpleDialogue : MonoBehaviour
     }
     void OnTriggerStay(Collider other)
     {
-        npcDialogue = GetComponent<NPCDialogue>();
-        if (inConversation == false && Input.GetKeyUp(KeyCode.E) || Input.GetKeyUp("joystick button 3"))
+        if (other.CompareTag("Player"))
         {
-            player.target = GetComponent<Transform>();
-            inConversation = true;
-            npcDialogue.TriggerDialogue();
-            ePopup.enabled = false; 
-        }
-        if (Time.time > delayTimer)
-        {
-            if (inConversation == true && Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown("joystick button 3"))
+            npcDialogue = GetComponent<NPCDialogue>();
+            if (inConversation == false && Input.GetKeyUp(KeyCode.E) || Input.GetKeyUp("joystick button 3"))
             {
-                delayTimer = Time.time + delay;
-                dialogueManager.ShowNextSentence();
+                player.target = GetComponent<Transform>();
+                inConversation = true;
+                npcDialogue.TriggerDialogue();
+                ePopup.enabled = false;
+            }
+            if (Time.time > delayTimer)
+            {
+                if (inConversation == true && Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown("joystick button 3"))
+                {
+                    delayTimer = Time.time + delay;
+                    dialogueManager.ShowNextSentence();
+                }
             }
         }
     }
