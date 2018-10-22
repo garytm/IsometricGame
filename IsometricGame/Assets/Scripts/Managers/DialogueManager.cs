@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class DialogueManager : MonoBehaviour
 {
     Player player;
+    CameraZoom cameraZoom;
+    NPCManager npcManager;
     public Animator animator;
     public Text nameText;
     public Text dialogueText;
@@ -15,6 +17,8 @@ public class DialogueManager : MonoBehaviour
 	void Start ()
     {
         player = FindObjectOfType<Player>();
+        cameraZoom = FindObjectOfType<CameraZoom>();
+        npcManager = FindObjectOfType<NPCManager>();
         /*Defining sentences as a new queue of type string*/
         sentences = new Queue<string>();
 	}
@@ -23,6 +27,8 @@ public class DialogueManager : MonoBehaviour
     {
         animator.SetBool("isOpen", true);
         player.canMove = false;
+        cameraZoom.isZoomed = true;
+        npcManager.LookAtPlayer();
         nameText.text = dialogue.name;
         /*Clears any left over sentences from a previous conversation*/
         sentences.Clear();
@@ -62,6 +68,8 @@ public class DialogueManager : MonoBehaviour
     {
         animator.SetBool("isOpen", false);
         player.canMove = true;
+        player.target = null;
+        cameraZoom.isZoomed = false;
         Debug.Log("End of conversation!");
     }
 }

@@ -10,9 +10,11 @@ public class Player : MonoBehaviour
     SimpleDialogue simpleDialogue;
     /*The rigid body that will be used to manipulate the player*/
     public Rigidbody rigid;
+    public Transform target;
     /*A float used to influence the players speed*/
     public float walkSpeed;
     public float runSpeed;
+    public float lookSpeed;
     /*A float for slower player movements (backing up etc.)*/
     public float slowSpeed;
     float canJump = 0.0f;
@@ -39,6 +41,8 @@ public class Player : MonoBehaviour
             Debug.LogError("No AudioManager found in scene!");
         }
         audioManager.PlaySound(backgroundMusicName);
+
+        target = null;
     }
     void Update()
     {
@@ -46,6 +50,19 @@ public class Player : MonoBehaviour
         Movement();
         /*Ensuring the states are updated every frame*/
         UpdateStates();
+        LookAtTarget();
+    }
+    void LookAtTarget()
+    {
+        if (target != null)
+        {
+            /*Setting a Vec3 direction to be the normalized value between the target and players positions*/
+            Vector3 direction = (target.position - transform.position).normalized;
+            /*Ensuring the player doesn't look up or down on the Y-Axis by setting it to 0*/
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0.0f, direction.z));
+            /*Setting the players rotation to gradually look at the target over time*/
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookSpeed);
+        }
     }
     public void Movement()
     {

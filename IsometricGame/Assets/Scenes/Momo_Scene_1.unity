@@ -401,6 +401,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 114748300607723164, guid: dacdd70be2170074799d22ca1c1b3c1b,
+        type: 2}
+      propertyPath: lookSpeed
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dacdd70be2170074799d22ca1c1b3c1b, type: 2}
   m_IsPrefabParent: 0
@@ -1809,7 +1814,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 80, y: 60}
+  m_AnchoredPosition: {x: 47, y: 81}
   m_SizeDelta: {x: 400, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &357107197
@@ -1833,11 +1838,11 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 0fba5c7e35d7a594086cd85f898cad39, type: 3}
-    m_FontSize: 29
+    m_FontSize: 25
     m_FontStyle: 0
     m_BestFit: 1
-    m_MinSize: 2
-    m_MaxSize: 40
+    m_MinSize: 0
+    m_MaxSize: 25
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -3088,7 +3093,7 @@ Transform:
   m_GameObject: {fileID: 621598763}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.00000058114523}
   m_LocalPosition: {x: 0.012, y: 0.523, z: 0.191}
-  m_LocalScale: {x: 0.32378694, y: 0.32378685, z: 0.323787}
+  m_LocalScale: {x: 0.64757377, y: 0.32378685, z: 0.5949586}
   m_Children: []
   m_Father: {fileID: 1073253384}
   m_RootOrder: 2
@@ -3120,8 +3125,8 @@ MonoBehaviour:
   dialogue:
     name: Frenchie
     sentences:
-    - POASFPAIHJGIOPAH
-    - GRSGSIJBSGBIS
+    - Hey there! I'm French, the Frenchie.
+    - It's really nice to meet you.
 --- !u!23 &621598767
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3920,6 +3925,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.2369723, y: 0.51594466, z: 0.41868898}
   m_Center: {x: -0.0062433723, y: 0.24202767, z: -0.029492235}
+--- !u!114 &738602463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 738602459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2283d3f661318bc40b6ba0d7288032d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &743699240 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100000, guid: 8647286b71bc5364a80d62d0d0602005, type: 3}
@@ -4787,6 +4803,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.27947617, y: 0.48805973, z: 0.60050166}
   m_Center: {x: 0.0107010845, y: 0.25597015, z: 0.028535653}
+--- !u!114 &857627034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 857627030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2283d3f661318bc40b6ba0d7288032d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &869904013 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100000, guid: 8647286b71bc5364a80d62d0d0602005, type: 3}
@@ -4912,8 +4939,8 @@ MonoBehaviour:
   dialogue:
     name: Pug
     sentences:
-    - "SNOO\t\t"
-    - OLLL
+    - I'm Pugnacious the Pug!
+    - You seem like a cool Corgi.
 --- !u!23 &885069737
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4973,7 +5000,7 @@ Transform:
   m_GameObject: {fileID: 885069734}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0.03856516, y: 0.49761, z: -0.022122389}
-  m_LocalScale: {x: 0.35792902, y: 0.35792896, z: 0.35792905}
+  m_LocalScale: {x: 0.84476805, y: 0.35792896, z: 0.83598745}
   m_Children: []
   m_Father: {fileID: 700518714}
   m_RootOrder: 2
@@ -9178,6 +9205,22 @@ Prefab:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: abcb9ab64d9166d4383a707daf21ba46, type: 2}
+    - target: {fileID: 400070, guid: 270a7dddbb8de954a90fca213a8c0c5e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.762583
+      objectReference: {fileID: 0}
+    - target: {fileID: 400070, guid: 270a7dddbb8de954a90fca213a8c0c5e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.62622654
+      objectReference: {fileID: 0}
+    - target: {fileID: 400070, guid: 270a7dddbb8de954a90fca213a8c0c5e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.114101075
+      objectReference: {fileID: 0}
+    - target: {fileID: 400070, guid: 270a7dddbb8de954a90fca213a8c0c5e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.11527553
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 270a7dddbb8de954a90fca213a8c0c5e, type: 3}
   m_IsPrefabParent: 0

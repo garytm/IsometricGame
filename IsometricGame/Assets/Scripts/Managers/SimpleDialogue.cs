@@ -8,7 +8,6 @@ public class SimpleDialogue : MonoBehaviour
     Player player;
     NPCDialogue npcDialogue;
     DialogueManager dialogueManager;
-    CameraZoom cameraZoom;
     public bool inConversation;
     public Image ePopup;
 
@@ -17,7 +16,6 @@ public class SimpleDialogue : MonoBehaviour
     void Start()
     {
         dialogueManager = FindObjectOfType<DialogueManager>();
-        cameraZoom = FindObjectOfType<CameraZoom>();
         player = FindObjectOfType<Player>();
         inConversation = false;
         ePopup.enabled = false;
@@ -38,9 +36,8 @@ public class SimpleDialogue : MonoBehaviour
         npcDialogue = GetComponent<NPCDialogue>();
         if (inConversation == false && Input.GetKeyUp(KeyCode.E) || Input.GetKeyUp("joystick button 3"))
         {
-            
+            player.target = GetComponent<Transform>();
             inConversation = true;
-            cameraZoom.isZoomed = true;
             npcDialogue.TriggerDialogue();
             ePopup.enabled = false; 
         }
@@ -57,8 +54,8 @@ public class SimpleDialogue : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            player.target = null;
             dialogueManager.EndDialogue();
-            cameraZoom.isZoomed = false;
             inConversation = false;
             ePopup.enabled = false;
         }
