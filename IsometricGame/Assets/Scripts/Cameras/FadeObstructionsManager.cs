@@ -26,8 +26,8 @@ public class FadeObstructionsManager : MonoBehaviour
     {
         void OnDestroy()
         {
-            FadeObstructionsManager.Instance.RemoveFadingObject(this.gameObject);
-            FadeObstructionsManager.Instance.UnRegisterShouldBeVisible(this.gameObject);
+            Instance.RemoveFadingObject(this.gameObject);
+            Instance.UnRegisterShouldBeVisible(this.gameObject);
         }
     }
 
